@@ -3,17 +3,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    [Range(0,1000)]
-    private float speed;
-    [SerializeField]
-    private float jumpForce;
-    private float WallImpulse = 1.5f;
-    private bool canjumpy,jumped,canjumpx,grabed;
-  
+    [SerializeField] [Range(0,1000)] private float speed;
+    [SerializeField] private float jumpForce;
+    private float wallImpulse = 1.5f;
+    private float direction;
+    public bool canjumpy,jumped,canjumpx,grabed;
+    
     [SerializeField]
     private LayerMask groundLayer;
-    private float coyote_time;
+    private float flyTime;
 
     public float Speed {
         get{
@@ -21,6 +19,7 @@ public class Player : MonoBehaviour
         }
         set{
             speed = Mathf.Max(value,0);
+            speed = Mathf.Min(value,1000);
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -28,15 +27,21 @@ public class Player : MonoBehaviour
     {
         
     }
+    void move(){
+        GetComponent<SpriteRenderer>().flipX = direction<0;
+        GetComponent<Rigidbody2D>().linearVelocityX = (Speed*Time.deltaTime)*direction;
+    }
+    void v_jump(){
 
+    }
+    void h_jump(){
+        
+    }
     // Update is called once per frame
     void Update()
     {
-        float direction = Input.GetAxis("Horizontal");
-        
-        GetComponent<SpriteRenderer>().flipX = direction<0;
-
-        GetComponent<Rigidbody2D>().linearVelocityX = (Speed*Time.deltaTime)*direction;
+        direction = Input.GetAxis("Horizontal");
+        move();
         //TODO:print
         Debug.DrawRay(transform.position,-transform.up*0.75f,Color.red,0);
         //TODO:print
@@ -49,29 +54,29 @@ public class Player : MonoBehaviour
         }else{
             canjumpx = false;
         }
-        if (canjumpx){
-            //TODO:print
-            Debug.Log("pared");
-        }else{
-            //TODO:print
-            Debug.Log("nopared");
-        }
+        
        
      
         if(!canjumpy){
-            coyote_time += Time.deltaTime;
+            flyTime += Time.deltaTime;
         }else{
-            coyote_time = 0;
+            flyTime = 0;
             jumped = false;
         }
-        if(Input.GetKeyDown(KeyCode.Space) && coyote_time <= 1 && !jumped && !grabed){
+        if(Input.GetKeyDown(KeyCode.Space) && flyTime <= 1 && !jumped && !grabed){
             GetComponent<Rigidbody2D>().linearVelocityY=jumpForce;
             jumped = true;
         }
         if (Input.GetKeyDown(KeyCode.Space) && grabed){
-                GetComponent<Rigidbody2D>().linearVelocity = new Vector2(jumpForce*direction,jumpForce*WallImpulse);
+                hitwall = Physics2D.Raycast(transform.position, new Vector2((GetComponent<SpriteRenderer>().flipX?-1f:1f), 0f), 0.45f, groundLayer);
+                if (!hitwall){
+                    GetComponent<Rigidbody2D>().linearVelocity = new Vector2(jumpForce*direction,jumpForce*wallImpulse);
+                    
+                }
                 grabed = false;
-           }
+                
+                
+        }
         if(canjumpx){
            grabed = true;
            
