@@ -10,7 +10,7 @@ public class Lever : MonoBehaviour
     private bool state;
     
     public MonoBehaviour target;
-    public List<Lever> linkedLevers;
+    public List<Lever> linkedLevers = new List<Lever>();
     public Sprite dis;
     public Sprite ena;
     private bool isplayer;
@@ -21,11 +21,12 @@ public class Lever : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().sprite = state?ena:dis;
         if(isplayer){
-            print("ho");
             if (Input.GetKeyDown(KeyCode.E) ){
                 state = !state;
-                foreach (var lever in linkedLevers){
-                    lever.state = state;
+                if (linkedLevers.Count>0){
+                    foreach (var lever in linkedLevers){
+                        lever.state = state;
+                    }
                 }
                 if (target is ISwichable){
                     ISwichable e = target as ISwichable;

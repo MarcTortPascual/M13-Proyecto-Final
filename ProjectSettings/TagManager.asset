@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Pared
+  - Vine
+  - Bullet
+  - coin
   layers:
   - Default
   - TransparentFX
@@ -40,8 +43,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: vine
+    uniqueID: 3803782419
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 878262375
     locked: 0
   - name: Obstacles
     uniqueID: 2045182805

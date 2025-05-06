@@ -9,6 +9,9 @@ public class PhantomBlock : MonoBehaviour
 
     private float time_in;
     private bool player_in = false;
+    public float change_time = 0.05f;
+    private float change_interval = 0;
+    private int state = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,16 +23,22 @@ public class PhantomBlock : MonoBehaviour
     void Update()
     {
       
-        time_in += player_in?Time.deltaTime:Time.deltaTime*-1;
-        time_in = Math.Max(time_in,0);
-        GetComponent<SpriteRenderer>().sprite = states[(int)time_in%5];
+        if (change_interval < change_time){
+            change_interval += Time.deltaTime;
+        }else{
+            state += player_in?1:0;
+            
+            change_interval = 0;
+        }
+        GetComponent<SpriteRenderer>().sprite = states[state%5];
 
-        GetComponent<BoxCollider2D>().enabled = !((int)time_in == 4);
+        GetComponent<BoxCollider2D>().enabled = !((int)(state%5) == 4);
     }
    void OnTriggerEnter2D (Collider2D col){
     player_in = col.gameObject.CompareTag("Player");
    }
    void OnTriggerExit2D (Collider2D col){
     player_in = !col.gameObject.CompareTag("Player");
+    state = 0;
    }
 }

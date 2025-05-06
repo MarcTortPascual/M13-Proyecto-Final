@@ -12,33 +12,45 @@ public class Platform : MonoBehaviour
     private RailSwicht rs;
     Rail ra;
     public float vel = 0.33f;
-    private int directon = 1;
+    private int direction = 1;
     float pos = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         canonicalRoute = new List<Rail>(route);
     }
-
-    // Update is called once per frame
+    void update_track(){
+        
+        route = new List<Rail>(canonicalRoute);
+        List<Rail> rt = route;
+        while (rt[rt.Count-1] is RailSwicht)
+        {
+            RailSwicht sw = rt[rt.Count-1] as RailSwicht;
+            rt = new List<Rail>(sw.direction == Directions.SWICHT_UP?sw.route_up:sw.route_down);
+            route.AddRange(rt);
+        }
+    }
+    
     void Update()
     {
-        
+        List<Rail> back;
         if (pos>=1 || pos<=0){
 
-            actualRail  += directon;
-            if (directon == 1){
+            actualRail  += direction;
+            if (direction == 1){
                 pos = 0;
             }else{
                 pos = 1;
             }
             
         }
-        if (actualRail > route.Count){
-            directon = -1;
+        if (actualRail >= route.Count){
+            
+            direction = -1;
         }
         if (actualRail < 0){
-            directon = 1;
+            
+            direction = 1;
         }
         ra = route[actualRail];
         var posRa= ra.transform.position;
@@ -57,6 +69,13 @@ public class Platform : MonoBehaviour
                     pos
                 );
                 break;
+            case Directions.DOWN:
+                transform.position = Vector2.Lerp(
+                    new Vector2(posRa.x,posRa.y),
+                    new Vector2(posRa.x,posRa.y-1f),
+                    pos
+                );
+                break;
             case Directions.UP_RIGHT:
              transform.position = Vector2.Lerp(
                     new Vector2(posRa.x,posRa.y),
@@ -65,17 +84,32 @@ public class Platform : MonoBehaviour
                 );
                 break;
             case Directions.UP_LEFT:
-             transform.position = Vector2.Lerp(
+                transform.position = Vector2.Lerp(
                     new Vector2(posRa.x,posRa.y),
                     new Vector2(posRa.x-1f,posRa.y+1f),
                     pos
                 );
                 break;
+            case Directions.DOWN_RIGHT:
+             transform.position = Vector2.Lerp(
+                    new Vector2(posRa.x,posRa.y),
+                    new Vector2(posRa.x+1f,posRa.y-1f),
+                    pos
+                );
+                break;
+            case Directions.DOWN_LEFT:
+                transform.position = Vector2.Lerp(
+                    new Vector2(posRa.x,posRa.y),
+                    new Vector2(posRa.x-1f,posRa.y-1f),
+                    pos
+                );
+                break;
             case Directions.SWICHT_UP:
-                rs = ra as RailSwicht; //si tine esta direcion asuminos que es un descvio
-                route = new List<Rail>(canonicalRoute);
-
-                route.AddRange(rs.route_up);
+                back = route;
+                update_track();
+                if (!route.Contains(ra)){
+                    route = back;
+                }
                 transform.position = Vector2.Lerp(
                     new Vector2(posRa.x,posRa.y),
                     new Vector2(posRa.x+0.75f,posRa.y+0.5f),
@@ -83,10 +117,12 @@ public class Platform : MonoBehaviour
                 );
                 break;
             case Directions.SWICHT_DOWN:
-                rs = ra as RailSwicht; //si tine esta direcion asuminos que es un descvio
-                route = new List<Rail>(canonicalRoute);
-
-                route.AddRange(rs.route_down);
+                back = route;
+                update_track();
+                if (!route.Contains(ra)){
+                    route = back;
+                }
+              
                 transform.position = Vector2.Lerp(
                     new Vector2(posRa.x,posRa.y),
                     new Vector2(posRa.x+0.75f,posRa.y-0.5f),
@@ -98,7 +134,7 @@ public class Platform : MonoBehaviour
 
         }
         
-        pos += vel*Time.deltaTime*directon;
+        pos += vel*Time.deltaTime*direction;
       
        
         
