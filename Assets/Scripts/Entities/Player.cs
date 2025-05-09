@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] [Range(0,1000)] private float speed;
     [SerializeField] private float jumpForce;
-    public TMP_Text coinsTxt;
+    public TMP_Text coinsTxt,timeTxt;
     public Sprite stunned, normal;
     private float wallImpulse = 1.5f;
     private float direction;
@@ -28,6 +28,12 @@ public class Player : MonoBehaviour
     public double stuned_time = 1.5;
     private double stuned_time_counter = 0;
     private float falling_time = 0;
+    private float level_time = 0;
+    public float Level_time {
+        get{
+            return level_time;
+        }
+    }
     public float Speed {
         get{
             return speed;
@@ -65,6 +71,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        level_time += Time.deltaTime;
+        
+        timeTxt.SetText(level_time.ToString("N2"));
         GetComponent<SpriteRenderer>().sprite = canmove?normal:stunned;
  
         coinsTxt.text = coins.ToString();
