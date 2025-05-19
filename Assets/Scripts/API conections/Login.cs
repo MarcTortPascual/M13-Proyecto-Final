@@ -1,11 +1,17 @@
 using System;
+using System.Text.Json;
 using System.Collections;
 using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
-
+using System.Text.Json.Serialization;
+using UnityEngine.SceneManagement;
+public class TokenResponse{
+    [JsonPropertyName("token")]
+    public string Token {get; set;}
+}
 public class Login : MonoBehaviour
 {
     //user:test pass:0000
@@ -13,14 +19,17 @@ public class Login : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public string username,password;
     public TMP_InputField  user, pass;
+    private TokenResponse tk = new();
 
     public string server;
-    private StreamReader server_env = new StreamReader("Assets/Assets/server.txt");
-    private StreamWriter session_token = new StreamWriter("Assets/Assets/token.txt");
+    
     private UnityWebRequest uwr ;
     void Start()
     {
+        using (StreamReader server_env = new ("Assets/Resources/server.txt"))
+        {
         server = server_env.ReadToEnd();
+        }
     }
 
     // Update is called once per frame
@@ -47,8 +56,18 @@ public class Login : MonoBehaviour
         uwr.downloadHandler = new DownloadHandlerBuffer();
         uwr.SetRequestHeader("Content-Type", "application/json");
         uwr.SetRequestHeader("Accept", "application/json");
+        uwr.SetRequestHeader("x-api-key","nZaC0OhAm512rgr1BkTEhI8c29Iju0sQNx9IK6eAYs098DJDbI");
         var response = uwr.SendWebRequest();
         yield return response;
-        print(uwr.downloadHandler.text);
+        print(response.webRequest.downloadHandler.text);
+        tk = JsonSerializer.Deserialize<TokenResponse>(response.webRequest.downloadHandler.text);
+        print(tk.Token);
+        using (StreamWriter session_token = new("Assets/Resources/token.txt")) {
+            session_token.Write(tk.Token);
+        }
+        if (!string.IsNullOrEmpty(tk.Token)){
+            SceneManager.LoadScene("LevelSelection");
+        }
+        
     }
 }

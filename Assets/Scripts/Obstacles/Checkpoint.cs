@@ -6,17 +6,11 @@ public class Checkpoint : MonoBehaviour
     public Transform point;
     public Sprite check,uncheck;
     private bool bcheck = false;    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = bcheck?check:uncheck;
-    
     }
     void OnTriggerEnter2D (Collider2D col){
         if (col.CompareTag("Player")){

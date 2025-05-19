@@ -1,6 +1,5 @@
 using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,23 +13,17 @@ public class Player : MonoBehaviour
     public float Direction {get{
         return direction;
     }}
-    public bool canjumpy,jumped,canjumpx,grabed,inVine,impuling,canmove;
-
-    private Transform dest,prev;
-
-    public Transform viewPoint,spawner;
-    
-    [SerializeField]
-    private LayerMask groundLayer;
+    public bool canjumpy,jumped,canjumpx,grabed,inVine,impuling,canmove,jumping;
+    public Transform viewPoint, spawner;
+    [SerializeField] private LayerMask groundLayer;
     private float flyTime;
-    private float time_lerp_camera;
-    private bool camera_moving,jumping;
     public double stuned_time = 1.5;
     private double stuned_time_counter = 0;
-    private float falling_time = 0;
     private float level_time = 0;
-    public float Level_time {
-        get{
+    public float Level_time
+    {
+        get
+        {
             return level_time;
         }
     }
@@ -52,30 +45,23 @@ public class Player : MonoBehaviour
             this.coins = value;
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
       transform.position = spawner.position;
+     
       canmove = true;
     }
     void move(){
         GetComponent<SpriteRenderer>().flipX = direction<0;
         GetComponent<Rigidbody2D>().linearVelocityX = (Speed*Time.deltaTime)*direction;
-    }
-    void v_jump(){
-
-    }
-    void h_jump(){
-        
+       
     }
     // Update is called once per frame
     void Update()
     {
         level_time += Time.deltaTime;
-        
         timeTxt.SetText(level_time.ToString("N2"));
         GetComponent<SpriteRenderer>().sprite = canmove?normal:stunned;
- 
         coinsTxt.text = coins.ToString();
         if(transform.parent){
             GetComponent<Rigidbody2D>().gravityScale = transform.parent.CompareTag("Vine") ? 0:1;
@@ -84,13 +70,7 @@ public class Player : MonoBehaviour
             GetComponent<Rigidbody2D>().gravityScale = 1; 
             direction = Input.GetAxis("Horizontal");
         }
-        
         Camera.main.transform.position = viewPoint.position;
-           
-        
-        
-       
-       
         if (canmove){
             move();
         }else{
@@ -100,8 +80,6 @@ public class Player : MonoBehaviour
                 canmove = true;
             }
         }
-      
-      
         RaycastHit2D hitGround = Physics2D.Raycast(transform.position, -transform.up, 0.75f, groundLayer);
         RaycastHit2D hitwall = Physics2D.Raycast(transform.position, new Vector3((float)Math.Truncate(direction), 0,0), 0.45f, groundLayer);
         canjumpy = hitGround.collider;
@@ -111,9 +89,6 @@ public class Player : MonoBehaviour
         }else{
             canjumpx = false;
         }
-        
-       
-     
         if(!canjumpy){
             flyTime += Time.deltaTime;
         }else{
@@ -150,11 +125,5 @@ public class Player : MonoBehaviour
         if (grabed ){
             GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
         }
-
-   
-    
-        
-        
-
     }
 }

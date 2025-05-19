@@ -43,6 +43,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Info
+    uniqueID: 1684802883
+    locked: 0
   - name: vine
     uniqueID: 3803782419
     locked: 0
