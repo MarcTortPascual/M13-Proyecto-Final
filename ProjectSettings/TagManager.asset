@@ -2,13 +2,18 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Ground
+  - Pared
+  - Vine
+  - Bullet
+  - coin
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 
@@ -38,6 +43,26 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Info
+    uniqueID: 1684802883
+    locked: 0
+  - name: vine
+    uniqueID: 3803782419
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 878262375
+    locked: 0
+  - name: Obstacles
+    uniqueID: 2045182805
+    locked: 0
+  - name: Platform
+    uniqueID: 3650302341
+    locked: 0
+  - name: Player
+    uniqueID: 3894693541
+    locked: 0
+  m_RenderingLayers:
+  - Default
