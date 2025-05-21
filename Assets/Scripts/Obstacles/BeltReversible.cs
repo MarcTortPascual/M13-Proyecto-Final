@@ -6,7 +6,6 @@ public class BeltReversible : Belt, ISwichable
     public Sprite dis;
     public Sprite ena;
     
-    
     void Start()
     {
         direction = -1;

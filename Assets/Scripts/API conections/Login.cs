@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Text.Json.Serialization;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class TokenResponse{
     [JsonPropertyName("token")]
     public string Token {get; set;}
@@ -26,9 +27,10 @@ public class Login : MonoBehaviour
     private UnityWebRequest uwr ;
     void Start()
     {
-        using (StreamReader server_env = new ("Assets/Resources/server.txt"))
+        print(Application.streamingAssetsPath);
+        using (StreamReader server_env = new(Path.Combine(Application.streamingAssetsPath,"server.txt")))
         {
-        server = server_env.ReadToEnd();
+            server = server_env.ReadToEnd();
         }
     }
 
@@ -42,13 +44,9 @@ public class Login : MonoBehaviour
         password = pass.text;
         StartCoroutine(LoginCo());
     }
-    void login(){
-     
-        
-    }
 
     private IEnumerator LoginCo(){
-
+        
         uwr = new UnityWebRequest(server+"api/login","POST");
         UploadHandlerRaw uhr = new(System.Text.Encoding.UTF8.GetBytes("{"+$"\"username\":\"{username}\",\"password\":\"{password}\""+"}"));
         uhr.contentType = "application/json";
@@ -62,7 +60,7 @@ public class Login : MonoBehaviour
         print(response.webRequest.downloadHandler.text);
         tk = JsonSerializer.Deserialize<TokenResponse>(response.webRequest.downloadHandler.text);
         print(tk.Token);
-        using (StreamWriter session_token = new("Assets/Resources/token.txt")) {
+        using (StreamWriter session_token = new(Path.Combine(Application.streamingAssetsPath,"token.txt"))) {
             session_token.Write(tk.Token);
         }
         if (!string.IsNullOrEmpty(tk.Token)){

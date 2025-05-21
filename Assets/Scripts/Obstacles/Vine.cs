@@ -27,9 +27,6 @@ public class Vine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
-        
         if (is_player){
             player.gameObject.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
             var t = transform.position;
@@ -50,8 +47,6 @@ public class Vine : MonoBehaviour
                 player.GetComponent<Rigidbody2D>().linearVelocityX *= vel;
                 
             }
-            
-            
         }else{
             vel = 0;
         }
@@ -64,7 +59,6 @@ public class Vine : MonoBehaviour
             col.transform.parent = transform;
             is_player = true;
             player = col.GetComponent<Player>();
-            
         }
     }
 

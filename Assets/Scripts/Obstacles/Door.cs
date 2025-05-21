@@ -12,11 +12,11 @@ public class Door : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        using (StreamReader server_env = new ("Assets/Resources/server.txt"))
+        using (StreamReader server_env = new (Path.Combine(Application.streamingAssetsPath,"server.txt")))
         {
             server = server_env.ReadToEnd();
         }
-        using (StreamReader token_env = new ("Assets/Resources/token.txt"))
+        using (StreamReader token_env = new (Path.Combine(Application.streamingAssetsPath,"token.txt")))
         {
             bearer_token = token_env.ReadToEnd();
         }
