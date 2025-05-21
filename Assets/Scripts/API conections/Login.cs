@@ -63,7 +63,9 @@ public class Login : MonoBehaviour
         using (StreamWriter session_token = new(Path.Combine(Application.streamingAssetsPath,"token.txt"))) {
             session_token.Write(tk.Token);
         }
-        if (!string.IsNullOrEmpty(tk.Token)){
+        
+        if (!string.IsNullOrEmpty(tk.Token))
+        {
             SceneManager.LoadScene("LevelSelection");
         }
         
